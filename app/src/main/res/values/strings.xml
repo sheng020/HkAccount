@@ -1,8 +1,10 @@
 <resources>
-    <string name="app_name">HkAccounting</string>
+    <string name="app_name">HkAccount</string>
 
     <string name="brvah_loading">Loading...</string>
     <string name="brvah_load_failed">load more failed</string>
     <string name="brvah_load_end">No more data</string>
     <string name="brvah_load_complete">Click to load more</string>
+    <string name="commit">Commit</string>
+    <string name="cancel">Cancel</string>
 </resources>
