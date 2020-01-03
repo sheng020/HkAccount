@@ -7,4 +7,7 @@
     <dimen name="dp_40">40dp</dimen>
 
     <dimen name="sp_14">14sp</dimen>
+
+    <dimen name="customTitle">16sp</dimen>
+    <dimen name="customEntry">14sp</dimen>
 </resources>

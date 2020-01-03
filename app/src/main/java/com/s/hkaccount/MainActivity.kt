@@ -7,6 +7,11 @@ import android.view.Menu
 import android.view.MenuInflater
 import androidx.lifecycle.ViewModelProviders
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.bottomsheets.BasicGridItem
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.bottomsheets.GridItem
+import com.afollestad.materialdialogs.bottomsheets.gridItems
+import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
 import com.s.hkaccount.persistent.Customer
@@ -21,6 +26,7 @@ class MainActivity : AppCompatActivity(), PreviewFragment.Callback {
         private const val CONTENT_FRAGMENT_TAG = "account_fragment"
         private const val STATE_PREVIEW = 0
         private const val STATE_ADD_CUSTOMER = 1
+        private const val STATE_ADD_PRODUCT = 2
     }
     private lateinit var accountViewModel: AccountViewModel
 
@@ -94,6 +100,19 @@ class MainActivity : AppCompatActivity(), PreviewFragment.Callback {
     override fun addNewCustomer() {
         mState = STATE_ADD_CUSTOMER
         next()
+    }
+
+    override fun addNewProduct(customer: Customer) {
+        mState = STATE_ADD_PRODUCT
+        MaterialDialog(this, BottomSheet()).show {
+            title(text = customer.name)
+            cornerRadius(16f)
+            customView(R.layout.add_new_product)
+            negativeButton(text = "取消", click = {
+                it.dismiss()
+            })
+            positiveButton(text = "确定")
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

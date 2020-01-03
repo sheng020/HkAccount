@@ -20,7 +20,6 @@ class CustomerMsgProvider : BaseNodeProvider() {
 
     override fun convert(helper: BaseViewHolder, data: BaseNode?) {
         val rootCustomerNode = data as? RootCustomerNode
-        Log.d("cjslog", "on base view holde")
         helper.setText(R.id.name, rootCustomerNode?.customer?.name ?: "")
     }
 

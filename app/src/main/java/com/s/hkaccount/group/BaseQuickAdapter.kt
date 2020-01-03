@@ -446,7 +446,7 @@ abstract class BaseQuickAdapter<T, VH : BaseViewHolder>
      * @param viewIds IntArray
      */
     fun addChildClickViewIds(@IdRes vararg viewIds: Int) {
-        for (viewId in viewIds) {
+        viewIds.forEach { viewId->
             childClickViewIds.add(viewId)
         }
     }
@@ -465,7 +465,7 @@ abstract class BaseQuickAdapter<T, VH : BaseViewHolder>
      * @param viewIds IntArray
      */
     fun addChildLongClickViewIds(@IdRes vararg viewIds: Int) {
-        for (viewId in viewIds) {
+        viewIds.forEach { viewId->
             childLongClickViewIds.add(viewId)
         }
     }
