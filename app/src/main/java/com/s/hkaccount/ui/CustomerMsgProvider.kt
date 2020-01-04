@@ -22,8 +22,4 @@ class CustomerMsgProvider : BaseNodeProvider() {
         val rootCustomerNode = data as? RootCustomerNode
         helper.setText(R.id.name, rootCustomerNode?.customer?.name ?: "")
     }
-
-    override fun onClick(helper: BaseViewHolder, view: View, data: BaseNode, position: Int) {
-        getAdapter()?.expandOrCollapse(position)
-    }
 }

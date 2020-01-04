@@ -9,11 +9,11 @@ import com.s.hkaccount.persistent.Product
  */
 
 fun transformRootCustomerNode(customer: Customer) : RootCustomerNode {
-    return RootCustomerNode(null, customer)
+    return RootCustomerNode(arrayListOf(), customer)
 }
 
 fun transformProductNode(product: Product) : ProductNode {
-    return ProductNode(product.name, product.buying_price, product.bought)
+    return ProductNode(product)
 }
 
 fun transformTreeNode(customers: List<Customer>, products: List<Product>) : MutableList<BaseNode> {
@@ -21,7 +21,7 @@ fun transformTreeNode(customers: List<Customer>, products: List<Product>) : Muta
     customers.forEach { customer: Customer ->
         val childNode = arrayListOf<BaseNode>()
         products.forEach { products->
-            if (products.id == customer.id) {
+            if (products.customerId == customer.id) {
                 childNode.add(transformProductNode(products))
             }
         }

@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
+import android.widget.CheckBox
+import android.widget.EditText
 import androidx.lifecycle.ViewModelProviders
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BasicGridItem
@@ -12,13 +14,15 @@ import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.bottomsheets.GridItem
 import com.afollestad.materialdialogs.bottomsheets.gridItems
 import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
 import com.s.hkaccount.persistent.Customer
-import com.s.hkaccount.ui.AbstractAccountFragment
-import com.s.hkaccount.ui.AccountViewModel
-import com.s.hkaccount.ui.PreviewFragment
+import com.s.hkaccount.persistent.Product
+import com.s.hkaccount.ui.*
 import io.reactivex.functions.Consumer
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity(), PreviewFragment.Callback {
 
@@ -27,8 +31,10 @@ class MainActivity : AppCompatActivity(), PreviewFragment.Callback {
         private const val STATE_PREVIEW = 0
         private const val STATE_ADD_CUSTOMER = 1
         private const val STATE_ADD_PRODUCT = 2
+        private const val STATE_REVIEW_PRODUCT = 3
     }
     private lateinit var accountViewModel: AccountViewModel
+    private var deliverData: DeliverData? = null
 
     private var mState = STATE_PREVIEW
 
@@ -71,6 +77,9 @@ class MainActivity : AppCompatActivity(), PreviewFragment.Callback {
                     })
                 }
             }
+            STATE_REVIEW_PRODUCT -> {
+                updateContentFragment(true)
+            }
         }
     }
 
@@ -79,6 +88,12 @@ class MainActivity : AppCompatActivity(), PreviewFragment.Callback {
         when(mState) {
             STATE_PREVIEW -> {
                 f = PreviewFragment.newInstance()
+            }
+            STATE_REVIEW_PRODUCT -> {
+                f = ReviewProductFragment.newInstance()
+                val bundle = Bundle()
+                bundle.putParcelable(AbstractAccountFragment.DELIVER_DATA, deliverData)
+                f.arguments = bundle
             }
             else -> {
                 throw IllegalStateException("Incorrect state $mState")
@@ -102,17 +117,10 @@ class MainActivity : AppCompatActivity(), PreviewFragment.Callback {
         next()
     }
 
-    override fun addNewProduct(customer: Customer) {
-        mState = STATE_ADD_PRODUCT
-        MaterialDialog(this, BottomSheet()).show {
-            title(text = customer.name)
-            cornerRadius(16f)
-            customView(R.layout.add_new_product)
-            negativeButton(text = "取消", click = {
-                it.dismiss()
-            })
-            positiveButton(text = "确定")
-        }
+    override fun reviewProduct(customer: Customer, product: Product) {
+        mState = STATE_REVIEW_PRODUCT
+        deliverData = DeliverData(customer, product)
+        next()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

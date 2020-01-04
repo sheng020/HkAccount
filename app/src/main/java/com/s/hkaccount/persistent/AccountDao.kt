@@ -3,7 +3,6 @@ package com.s.hkaccount.persistent
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import io.reactivex.Flowable
 import io.reactivex.Single
 
 /**
@@ -20,4 +19,7 @@ interface AccountDao {
 
     @Insert(entity = Customer::class)
     fun insertCustomer(customer: Customer) : Single<Long>
+
+    @Insert(entity = Product::class)
+    fun insertProduct(product: Product) : Single<Long>
 }
