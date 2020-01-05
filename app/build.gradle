@@ -17,9 +17,21 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        Properties properties = new Properties()
+        InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream() ;
+        properties.load( inputStream )
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [
+                    "juhe_appkey":properties.getProperty("JUHE_KEY")
+            ]
+        }
+        debug {
+            manifestPlaceholders = [
+                    "juhe_appkey":properties.getProperty("JUHE_KEY")
+            ]
         }
     }
     dataBinding {
