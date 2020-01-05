@@ -7,18 +7,15 @@ import androidx.room.PrimaryKey
 /**
  * Create by chenjunsheng on 2020/1/2
  */
-@Entity(tableName = "product",
-    foreignKeys = [ForeignKey(entity = Customer::class,
-        parentColumns = ["id"],
-        childColumns = ["customerId"])])
+@Entity(tableName = "product")
 data class Product(
     var customerId: Long, //客户id
     var name: String,
-    val buy_count: Int,
+    var buy_count: Int,
     var date: String,
     var buying_price: Float,
-    var sale_price: Float,
-    var bought: Boolean
+    var bought: Boolean,
+    var totalPrice: Float
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0

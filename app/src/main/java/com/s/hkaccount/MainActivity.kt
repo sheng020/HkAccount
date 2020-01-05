@@ -20,11 +20,13 @@ import com.afollestad.materialdialogs.input.input
 import com.s.hkaccount.persistent.Customer
 import com.s.hkaccount.persistent.Product
 import com.s.hkaccount.ui.*
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : AppCompatActivity(), PreviewFragment.Callback {
+class MainActivity : AppCompatActivity(), PreviewFragment.Callback,
+    ReviewProductFragment.Callback {
 
     companion object {
         private const val CONTENT_FRAGMENT_TAG = "account_fragment"
@@ -35,6 +37,7 @@ class MainActivity : AppCompatActivity(), PreviewFragment.Callback {
     }
     private lateinit var accountViewModel: AccountViewModel
     private var deliverData: DeliverData? = null
+    private val disposable = CompositeDisposable()
 
     private var mState = STATE_PREVIEW
 
@@ -59,8 +62,8 @@ class MainActivity : AppCompatActivity(), PreviewFragment.Callback {
             }
             STATE_ADD_CUSTOMER -> {
                 MaterialDialog(this).show {
-                    title(text = "输入客户姓名")
-                    input(hint = "客户姓名")
+                    title(text = "输入商场名")
+                    input(hint = "商场名")
                     cornerRadius(16f)
                     positiveButton(text = "确定") { dialog->
                         val name = dialog.getInputField().text.toString()
@@ -78,7 +81,7 @@ class MainActivity : AppCompatActivity(), PreviewFragment.Callback {
                 }
             }
             STATE_REVIEW_PRODUCT -> {
-                updateContentFragment(true)
+                updateContentFragment(false)
             }
         }
     }
@@ -123,9 +126,44 @@ class MainActivity : AppCompatActivity(), PreviewFragment.Callback {
         next()
     }
 
+    override fun modifyProductDetail(product: Product) {
+        mState = STATE_PREVIEW
+        disposable.add(
+            accountViewModel.updateProduct(product)
+                .subscribe(Consumer {
+                    //supportFragmentManager.popBackStack()
+                    next()
+                }, Consumer {
+                    Log.d("cjslog", "update product fail", it)
+                })
+        )
+
+    }
+
+    override fun reviewBackwards() {
+        mState = STATE_PREVIEW
+        //supportFragmentManager.popBackStack()
+        next()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.custom_menu, menu)
         return true
+    }
+
+    override fun onBackPressed() {
+        if (getContentFragment()?.onBackPressed() != true) {
+            super.onBackPressed()
+        }
+    }
+
+    override fun addSaleRecord(product: Product) {
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        disposable.clear()
     }
 }

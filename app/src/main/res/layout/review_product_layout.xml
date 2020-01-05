@@ -1,9 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customer_name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/name_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="商品名称" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/hk_price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/hk_price_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="港币价格" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/buy_count"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hk_price">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/buy_count_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="购买数量"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <CheckBox
+        android:id="@+id/bought"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:text="已购"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:text="购买日期"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buy_count" />
+
+    <TextView
+        android:id="@+id/buy_date_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textColor="@android:color/background_dark"
+        app:layout_constraintBottom_toBottomOf="@+id/date"
+        app:layout_constraintStart_toEndOf="@+id/date"
+        app:layout_constraintTop_toTopOf="@+id/date"
+        tools:text="1111111" />
+
+    <TextView
+        android:id="@+id/customer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:text="客户名"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/customer_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/customer_name"
+        app:layout_constraintStart_toEndOf="@+id/customer_name"
+        app:layout_constraintTop_toTopOf="@+id/customer_name"
+        tools:text="TextView" />
+
+    <Button
+        android:id="@+id/confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="确定"
+        app:layout_constraintBottom_toBottomOf="@+id/sale"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/sale"
+        app:layout_constraintTop_toTopOf="@+id/sale" />
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="取消"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/delete"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/reference_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="参考人民币价格"
+        app:layout_constraintBottom_toBottomOf="@+id/buy_date_tv"
+        app:layout_constraintStart_toEndOf="@+id/buy_date_tv"
+        app:layout_constraintTop_toTopOf="@+id/buy_date_tv" />
+
+    <TextView
+        android:id="@+id/reference_price_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textColor="@android:color/background_dark"
+        app:layout_constraintBottom_toBottomOf="@+id/reference_price"
+        app:layout_constraintStart_toEndOf="@+id/reference_price"
+        app:layout_constraintTop_toTopOf="@+id/reference_price"
+        tools:text="TextView" />
+
+    <TextView
+        android:id="@+id/exchange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="汇率"
+        app:layout_constraintBottom_toBottomOf="@+id/bought"
+        app:layout_constraintStart_toEndOf="@+id/bought"
+        app:layout_constraintTop_toTopOf="@+id/bought" />
+
+    <TextView
+        android:id="@+id/exchange_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/exchange"
+        app:layout_constraintStart_toEndOf="@+id/exchange"
+        app:layout_constraintTop_toTopOf="@+id/exchange"
+        tools:text="TextView" />
+
+    <Button
+        android:id="@+id/delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="删除"
+        app:layout_constraintBottom_toBottomOf="@+id/cancel"
+        app:layout_constraintEnd_toStartOf="@+id/sale"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cancel"
+        app:layout_constraintTop_toTopOf="@+id/cancel" />
+
+    <Button
+        android:id="@+id/sale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="售出"
+        app:layout_constraintBottom_toBottomOf="@+id/delete"
+        app:layout_constraintEnd_toStartOf="@+id/confirm"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/delete"
+        app:layout_constraintTop_toTopOf="@+id/delete" />
+
+    <com.yanzhenjie.recyclerview.SwipeRecyclerView
+        android:id="@+id/sale_record"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/delete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bought" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

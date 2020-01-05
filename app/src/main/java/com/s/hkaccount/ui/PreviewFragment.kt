@@ -7,13 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.WhichButton
+import com.afollestad.materialdialogs.actions.setActionButtonEnabled
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.s.hkaccount.R
 import com.s.hkaccount.group.BaseNodeAdapter
 import com.s.hkaccount.group.BaseQuickAdapter
@@ -24,9 +29,11 @@ import com.s.hkaccount.group.viewholder.BaseViewHolder
 import com.s.hkaccount.persistent.Customer
 import com.s.hkaccount.persistent.Product
 import io.reactivex.*
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Consumer
+import io.reactivex.functions.Function3
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -67,11 +74,11 @@ class PreviewFragment : AbstractAccountFragment(),
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         adapter = CustomerNodeAdapter()
             .apply {
                 setOnItemChildClickListener(this@PreviewFragment)
                 addChildClickViewIds(R.id.add_commodity)
+                addChildClickViewIds(R.id.bought)
                 addFullSpanNodeProvider(CustomerMsgProvider().apply {
                     onNodeProviderItemClick = this@PreviewFragment
                 })
@@ -84,10 +91,6 @@ class PreviewFragment : AbstractAccountFragment(),
         preview?.layoutManager = GridLayoutManager(activity, 3)
         preview?.adapter = adapter
 
-    }
-
-    override fun onStart() {
-        super.onStart()
         accountViewModel?.let { viewModel->
             disposable.add(Single.zip(viewModel.getCustomers(),
                 viewModel.getProducts(),
@@ -103,6 +106,7 @@ class PreviewFragment : AbstractAccountFragment(),
                 Consumer<Throwable> { t ->
                     Log.d("cjslog", "preview load fragment fail", t) }))
         }
+
     }
 
     override fun onClick(v: View) {
@@ -140,28 +144,71 @@ class PreviewFragment : AbstractAccountFragment(),
                     title(text = rootCustomerNode.customer.name)
                     cornerRadius(16f)
                     customView(R.layout.add_new_product)
-                    negativeButton(text = "取消", click = {
-                        it.dismiss()
-                    })
-                    positiveButton(text = "确定") { dialog ->
-                        cornerRadius(16f)
-                        val customView = dialog.getCustomView()
-                        val name = customView.findViewById<EditText>(R.id.name_et).text.toString()
-                        val buyCount = customView.findViewById<EditText>(R.id.count_et).text.toString().toInt()
-                        val hkPrice = customView.findViewById<EditText>(R.id.hk_price_et).text.toString().toFloat()
-                        val rmbPrice = customView.findViewById<EditText>(R.id.rmb_price_et).text.toString().toFloat()
-                        val bought = customView.findViewById<CheckBox>(R.id.bought).isChecked
-                        val id = rootCustomerNode.customer.id
-                        val sfd = SimpleDateFormat.getDateInstance()
-                        val today = sfd.format(Date())
-                        val product = Product(id, name, buyCount, today, hkPrice, rmbPrice, bought)
-                        val productNode = ProductNode(product)
-                        (adapter as BaseNodeAdapter).nodeAddData(rootCustomerNode, 0, productNode)
-                        accountViewModel?.let {
-                            disposable.add(it.newProduct(product)
-                                .subscribe())
+                        .also { dialog->
+                            val customView = dialog.getCustomView()
+                            val name = customView.findViewById<EditText>(R.id.name_et)
+                            val buyCount = customView.findViewById<EditText>(R.id.count_et)
+                            val hkPrice = customView.findViewById<EditText>(R.id.hk_price_et)
+                            val bought = customView.findViewById<CheckBox>(R.id.bought).isChecked
+                            val totalPrice = customView.findViewById<EditText>(R.id.total_price)
+                            val cTotalPrice = customView.findViewById<TextView>(R.id.hk_total_price_tv)
+                            val nameObservable = RxTextView.textChanges(name).skip(1)
+                            val buyCountObservable = RxTextView.textChanges(buyCount).skip(1)
+                            val hkPriceObservable = RxTextView.textChanges(hkPrice).skip(1)
+                            Observable.combineLatest(nameObservable,
+                                buyCountObservable,
+                                hkPriceObservable,
+                                Function3<CharSequence,
+                                        CharSequence,
+                                        CharSequence,
+                                        Boolean> { t1,
+                                                   t2,
+                                                   t3 ->
+                                    t1.isNotEmpty() && t2.isNotEmpty() && t3.isNotEmpty()
+                                })
+                                .doOnSubscribe {
+                                    dialog.setActionButtonEnabled(WhichButton.POSITIVE, false)
+                                }
+                                .subscribe {
+                                    cTotalPrice.setText(
+                                        (hkPrice.text.toString().toFloat()
+                                                *  buyCount.text.toString().toInt()).toString()
+                                    )
+                                    dialog.setActionButtonEnabled(WhichButton.POSITIVE, it)
+                            }
+                            negativeButton(text = "取消", click = {
+                                it.dismiss()
+                            })
+                            positiveButton(text = "确定") { dialog ->
+                                cornerRadius(16f)
+                                val id = rootCustomerNode.customer.id
+                                val sfd = SimpleDateFormat.getDateInstance()
+                                val today = sfd.format(Date())
+                                var totalPrice1 = -1f
+                                if (totalPrice.text.toString().isNotEmpty()) {
+                                    totalPrice1 = totalPrice.text.toString().toFloat() * buyCount.text.toString().toInt()
+                                }
+                                val product = Product(id, name.text.toString(),
+                                    buyCount.text.toString().toInt(),
+                                    today, hkPrice.text.toString().toFloat(),
+                                    bought, totalPrice1)
+                                val productNode = ProductNode(product)
+                                (adapter as BaseNodeAdapter).nodeAddData(rootCustomerNode, 0, productNode)
+                                accountViewModel?.let {
+                                    disposable.add(it.newProduct(product)
+                                        .subscribe())
+                                }
+                            }
                         }
-                    }
+                }
+            }
+            R.id.bought -> {
+                val product = (adapter.getItem(position)
+                        as? ProductNode)?.product ?: return
+                product.bought = (view as CheckBox).isChecked
+                accountViewModel?.let {
+                    disposable.add(it.updateProduct(product)
+                        .subscribe())
                 }
             }
         }

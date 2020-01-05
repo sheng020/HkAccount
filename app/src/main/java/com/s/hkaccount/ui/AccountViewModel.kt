@@ -41,6 +41,11 @@ class AccountViewModel(private val dataSource: AccountDao) : ViewModel() {
             .compose(applySchedulersForSingle())
     }
 
+    fun updateProduct(product: Product) : Single<Int> {
+        return dataSource.updateProduct(product)
+            .compose(applySchedulersForSingle())
+    }
+
     private fun <T> applySchedulersForSingle() : SingleTransformer<T, T> {
         return SingleTransformer { upstream ->
             upstream.subscribeOn(Schedulers.io())

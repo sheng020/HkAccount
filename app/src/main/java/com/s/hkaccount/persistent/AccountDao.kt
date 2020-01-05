@@ -3,6 +3,7 @@ package com.s.hkaccount.persistent
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import io.reactivex.Single
 
 /**
@@ -22,4 +23,7 @@ interface AccountDao {
 
     @Insert(entity = Product::class)
     fun insertProduct(product: Product) : Single<Long>
+
+    @Update(entity = Product::class)
+    fun updateProduct(product: Product) : Single<Int>
 }

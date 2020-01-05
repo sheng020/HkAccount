@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="12sp"
             android:layout_marginTop="4dp"
-            android:hint="港币价格"
+            android:hint="单价（港币）"
             android:inputType="number"
             android:textColor="?android:textColorPrimary"
             android:textSize="@dimen/customEntry"
@@ -62,12 +62,12 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/rmb_price_et"
+            android:id="@+id/total_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12sp"
             android:layout_marginTop="4dp"
-            android:hint="每个实收（人民币）"
+            android:hint="总价（港币），不输入为默认单价乘数量"
             android:inputType="number"
             android:textColor="?android:textColorPrimary"
             android:textSize="@dimen/customEntry"
@@ -85,5 +85,30 @@
         android:text="已经购买"
         android:textColor="?android:textColorPrimary"
         android:textSize="@dimen/customEntry" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp">
+
+        <TextView
+            android:id="@+id/hk_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="港币总价"
+            android:layout_marginLeft="16sp"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="@dimen/customEntry"/>
+
+        <TextView
+            android:id="@+id/hk_total_price_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8sp"
+            tools:text="TextView" />
+    </LinearLayout>
+
+
 
 </LinearLayout>

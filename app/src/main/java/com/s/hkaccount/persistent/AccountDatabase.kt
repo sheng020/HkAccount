@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 /**
  * Create by chenjunsheng on 2020/1/2
  */
-@Database(entities = [Product::class, Customer::class], version = 1)
+@Database(entities = [Product::class, Customer::class, Sale::class], version = 1)
 abstract class AccountDatabase : RoomDatabase() {
 
     abstract fun accountDao() : AccountDao

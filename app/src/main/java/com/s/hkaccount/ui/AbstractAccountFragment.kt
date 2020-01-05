@@ -30,4 +30,9 @@ abstract class AbstractAccountFragment : Fragment() {
     open fun addNewCustomer(customer: Customer) {
         throw UnsupportedOperationException()
     }
+
+    open fun onBackPressed() : Boolean {
+        return false
+    }
+
 }

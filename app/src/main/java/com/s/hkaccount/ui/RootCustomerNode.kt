@@ -12,4 +12,12 @@ class RootCustomerNode(private val children: MutableList<BaseNode>?,
 
     override val childNode: MutableList<BaseNode>?
         get() = children
+
+    fun addProductNode(productNode: BaseNode) {
+        children?.add(productNode)
+    }
+
+    fun addProductNode(productNodes: MutableList<BaseNode>) {
+        children?.addAll(productNodes)
+    }
 }
